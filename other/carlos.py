@@ -1,25 +1,26 @@
-import glob
+# import glob
 import math
-import os
-import sys
+
+# import os
+# import sys
 import time
 
 # import thread
 from random import randint
 
-try:
-    sys.path.append(
-        glob.glob(
-            "../carla/dist/carla-*%d.%d-%s.egg"
-            % (
-                sys.version_info.major,
-                sys.version_info.minor,
-                "win-amd64" if os.name == "nt" else "linux-x86_64",
-            )
-        )[0]
-    )
-except IndexError:
-    pass
+# try:
+#     sys.path.append(
+#         glob.glob(
+#             "../carla/dist/carla-*%d.%d-%s.egg"
+#             % (
+#                 sys.version_info.major,
+#                 sys.version_info.minor,
+#                 "win-amd64" if os.name == "nt" else "linux-x86_64",
+#             )
+#         )[0]
+#     )
+# except IndexError:
+#     pass
 
 import carla
 from carla.libcarla import Vector3D
@@ -70,7 +71,7 @@ class RoadUser:
     def __vectorLength(self, x, y):
         a = pow(x, 2)
         b = pow(y, 2)
-        return (math.sqrt(a) + math.sqrt(b))
+        return math.sqrt(a) + math.sqrt(b)
 
     def __vectorAngle(self):
         vectorX = [
@@ -127,8 +128,3 @@ class Carlos:
             time.sleep(0.5)
         for actorKey in self.__allActors.keys:
             print(self.__allActors[actorKey])
-
-
-if __name__ == "__main__":
-    a = Carlos()
-    a.startPollingCoordinates()
