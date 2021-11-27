@@ -4,9 +4,9 @@ import time
 
 def main():
     api = API()
-    api.startPollingCoordinates()
+    api.start_polling_coordinates()
     time.sleep(5)
-    api.stopPollingCoordinates()
+    api.stop_polling_coordinates()
     for actor in api.getRelevantActors():
         print(actor)
 
