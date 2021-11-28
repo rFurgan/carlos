@@ -1,4 +1,4 @@
-from API import API
+from api import API
 import time
 
 
@@ -7,8 +7,8 @@ def main():
     api.start_polling_coordinates()
     time.sleep(5)
     api.stop_polling_coordinates()
-    for actor in api.getRelevantActors():
-        print(actor)
+    for actor in api.get_relevant_actors():
+        print(actor.get_data())
 
 
 if __name__ == "__main__":
