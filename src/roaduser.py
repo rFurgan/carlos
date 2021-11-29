@@ -52,9 +52,9 @@ class RoadUser:
             del self.__positions[next(iter(self.__positions))]
         self.__positions[timestamp] = self.__add_deviation(position)
         self.__target_position = target_position
-        self.__orientation = self.__vector_angle()
+        self.__orientation = self.__get_orientation()
         self.__velocity = self.__get_velocity()
-        self.__distance = self.__vector_length()
+        self.__distance = self.__get_distance()
 
     # Need some investigation on how big the deviation actually is with GPS nowadays
     def __add_deviation(self, position: Vector3D, deviation: float = 0) -> Vector3D:
@@ -66,13 +66,15 @@ class RoadUser:
     def __get_velocity(self) -> Union[float, None]:
         timestamps: List[str] = list(self.__positions.keys())
         if len(timestamps) >= 2:
-            return self.__vector_length() / (timestamps[1] - timestamps[0])
+            return (
+                self.__get_distance() / ((timestamps[1] - timestamps[0]) * 1e-9)
+            ) * 3.6
         print(
             f"[WARN][{self.__get_velocity.__name__}] Couldn't calculate the velocity due to insufficient data!"
         )
         return None
 
-    def __vector_length(self) -> Union[float, None]:
+    def __get_distance(self) -> Union[float, None]:
         timestamps = list(self.__positions.keys())
         if len(timestamps) >= 2:
             x = self.__target_position.x - self.__positions[timestamps[1]].x
@@ -80,11 +82,11 @@ class RoadUser:
             z = self.__target_position.z - self.__positions[timestamps[1]].z
             return sqrt((x * x) + (y * y) + (z * z))
         print(
-            f"[WARN][{self.__vector_length.__name__}] Couldn't calculate the vector length due to insufficient data!"
+            f"[WARN][{self.__get_distance.__name__}] Couldn't calculate the vector length due to insufficient data!"
         )
         return None
 
-    def __vector_angle(self) -> float:
+    def __get_orientation(self) -> float:
         timestamps = list(self.__positions.keys())
         return degrees(
             arccos(

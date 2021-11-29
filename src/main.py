@@ -1,13 +1,13 @@
 from api import API
-import time
+from time import sleep
 
 
 def main():
     api = API()
     api.start_polling_coordinates()
-    time.sleep(5)
+    sleep(5)
     api.stop_polling_coordinates()
-    for actor in api.get_relevant_actors():
+    for actor in api.get_actors():
         print(actor.get_data())
 
 
