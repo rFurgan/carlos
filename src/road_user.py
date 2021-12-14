@@ -1,7 +1,6 @@
 from carla import Vector3D
 from typing import Union, Dict
 from random import randint
-from json import dumps
 from numpy import arccos
 from math import degrees, sqrt
 from common.position_time import PositionTime
@@ -67,7 +66,7 @@ class RoadUser:
         """
         return self._id
 
-    def get_data(self) -> str:
+    def get_data(self) -> Dict[float, Dict[str, Union[float, None]]]:
         """
         Returns all the data collected over the runtime of the program
 
@@ -76,25 +75,12 @@ class RoadUser:
 
         Returns
         -------
-        str
-            All the data collected over the runtime of the program in JSON format
-            Example of the format:
-            "1": {
-                "1005.4651102274656": {
-                    "orientation": 20.823125854342642,
-                    "velocity": 34.124251258543421,
-                    "distance": 10.534968201994212
-                },
-                "1006.4651102274656": {
-                    "orientation": 20.823125854342642,
-                    "velocity": 35.324251258849532,
-                    "distance": 11.684032985021244
-                },
-            }
+        Dict[float, Dict[str, Union[float, None]]]
+            Data in a dictionary with the key being the timestamp and the corresponding data is dictionary with velocity, distance and orientation as values
         """
-        return dumps({self._id: self._data})
+        return self._data
 
-    def get_recent_data(self) -> str:
+    def get_recent_data(self) -> Dict[int, Dict[str, Union[float, None]]]:
         """
         Returns the most recent data collected
 
@@ -103,19 +89,11 @@ class RoadUser:
 
         Returns
         -------
-        str
-            The most recent data collected over the runtime of the program in JSON format
-            Example of the format:
-            "1": {
-                "1005.4651102274656": {
-                    "orientation": 20.823125854342642,
-                    "velocity": 34.124251258543421,
-                    "distance": 10.534968201994212
-                }
-            }
+        Dict[int, Dict[str, Union[float, None]]]
+            The most recent data collected over the runtime of the program as a dictionary
         """
         timestamp = list(self._data)[-1]
-        return dumps({self._id: {timestamp: self._data[timestamp]}})
+        return {timestamp: self._data[timestamp]}
 
     def update(self, position: Vector3D, timestamp: float) -> None:
         """

@@ -3,6 +3,7 @@ from typing import Union, List, Dict
 from gnss_sensor import GnssSensor
 from common.logger import Logger, LogType
 from road_user import RoadUser
+from json import dumps
 
 
 class Api:
@@ -136,11 +137,51 @@ class Api:
             Data of the actor(s) in JSON format (see example above)
         """
         if id == None:
-            dataset = ""
+            dataset = {}
             for road_user in self._road_users:
-                dataset += self._road_users[road_user].get_data() + ","
-            return dataset
-        return self._road_users[id].get_data()
+                dataset[road_user] = self._road_users[road_user].get_data()
+            return dumps(dataset)
+        return dumps(self._road_users[id].get_data())
+
+    def get_recent_data(self, id: int = None) -> str:
+        """
+        Returns most recent data of all detected actors in JSON format
+
+        Returns either the most recent data of all detected actors or by providing an id it returns the most recent data only from the actor of the given id
+        Example of the format:
+        {
+            "1": {
+                "1005.4651102274656": {
+                    "orientation": 20.823125854342642,
+                    "velocity": 34.124251258543421,
+                    "distance": 10.534968201994212
+                },
+            },
+            "2": {
+                "1005.4651102274656": {
+                    "orientation": 13.23908235091124,
+                    "velocity": 34.234523634234256,
+                    "distance": 15.234523634234256
+                },
+            }
+        }
+
+        Paramters
+        ---------
+        id : int
+            Option to only get data of the actor with the given id (default is None)
+
+        Returns
+        -------
+        str
+            Most recent data of the actor(s) in JSON format (see example above)
+        """
+        if id == None:
+            dataset = {}
+            for road_user in self._road_users:
+                dataset[road_user] = self._road_users[road_user].get_recent_data()
+            return dumps(dataset)
+        return dumps(self._road_users[id].get_recent_data())
 
     def _connect_to_world(self, host: str, port: int) -> None:
         """

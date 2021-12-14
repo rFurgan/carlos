@@ -1,5 +1,5 @@
 from typing import Callable, Union
-from carla import World, Actor, Vector3D, Sensor, GNSSMeasurement
+from carla import World, Actor, Vector3D, Sensor
 import weakref
 
 """
@@ -86,7 +86,7 @@ class GnssSensor:
         return self._actor_id
 
     @staticmethod
-    def _on_gnss_event(weak_self: weakref, event: GNSSMeasurement) -> None:
+    def _on_gnss_event(weak_self: weakref, event) -> None:
         """
         Method to be called when new GNSS sensor data arrives
 
@@ -96,7 +96,7 @@ class GnssSensor:
         ----------
         weak_self : weakref
             Weak reference to the object itself
-        event: GNSSMeasurement
+        event
             GNSS data including timestamp, frame, latitude, longitude, altitude and transform
 
         Returns
