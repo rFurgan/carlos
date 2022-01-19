@@ -1,16 +1,8 @@
-from datatypes.geoposition import Geoposition
+from datatypes import Geoposition
 
 
 class GnssSensor:
-
-    def __init__(
-        self,
-        actor,
-        world,
-        on_data,
-        update_timer=1.0,
-        factor=100000
-    ):
+    def __init__(self, actor, world, on_data, update_timer=1.0, factor=100000):
         self._actor = actor
         self._on_data = on_data
         self._update_timer = update_timer
@@ -33,11 +25,11 @@ class GnssSensor:
     def _on_gnss_event(self, event):
         if event.timestamp - self._ref_timestamp >= self._update_timer:
             self._on_data(
-                round(event.timestamp, 1),
+                event.timestamp,
                 Geoposition(
-                    longitude = event.longitude * self._factor,
-                    latitude = event.latitude * self._factor,
-                    altitdue = event.altitude * self._factor,
+                    longitude=event.longitude * self._factor,
+                    latitude=event.latitude * self._factor,
+                    altitude=event.altitude * self._factor,
                 ),
             )
             self._ref_timestamp = event.timestamp

@@ -1,10 +1,9 @@
 from carla import Client
 from road_user import RoadUser
-from datatypes.actor_type import EActorType
+from datatypes import EActorType
 
 
 class Api:
-
     def __init__(self):
         self._road_users = {}
         self._client = None
@@ -28,11 +27,14 @@ class Api:
 
     def _register_actors(self, hero_id):
         hero = self._world.get_actor(hero_id)
-        if (hero == None):
+        if hero == None:
             exit()
         self._road_users[hero_id] = RoadUser(hero_id, hero, self._world)
         for actor in self._world.get_actors():
             if actor.id != hero_id and (
-                EActorType.vehicle in actor.type_id or EActorType.pedestrian in actor.type_id
+                EActorType.VEHICLE.value in actor.type_id
+                or EActorType.PEDESTRIAN.value in actor.type_id
             ):
-                self._road_users[actor.id] = RoadUser(actor.id, actor, self._world, self._road_users[hero_id])
+                self._road_users[actor.id] = RoadUser(
+                    actor.id, actor, self._world, self._road_users[hero_id]
+                )
