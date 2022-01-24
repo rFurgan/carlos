@@ -7,6 +7,11 @@ class EActorType(Enum):
     PEDESTRIAN = "pedestrian"
 
 
+class ETimestampType(Enum):
+    BEFORE = "before"
+    AFTER = "after"
+
+
 class Vector(NamedTuple):
     x: float
     y: float
@@ -19,9 +24,7 @@ class Geoposition(NamedTuple):
     altitude: float
 
 
-class Data(NamedTuple):
-    id: int
-    type: EActorType
+class CalculatedData(NamedTuple):
     position: Geoposition
     orientation: int
     velocity: int
@@ -32,3 +35,14 @@ class Data(NamedTuple):
 class HeroData(NamedTuple):
     distance_to_hero: float
     angle_to_hero: int
+
+
+class Data(NamedTuple):
+    id: int
+    timestamp: float
+    data: CalculatedData
+
+
+class CloseTimestamp(NamedTuple):
+    timestamp: float
+    type: ETimestampType

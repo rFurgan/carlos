@@ -1,8 +1,9 @@
-from api import Api
 from time import sleep
+from api import Api
 
 if __name__ == "__main__":
-    a = Api()
-    a.start(24)
+    api = Api()
+    api.start(36)
+    api.subscribe(lambda data: print(f"ID:{data.id}\nTimestamp: {data.timestamp}\nPosition: {data.position}\n----------------"))
     sleep(5)
-    del a
+    del api
