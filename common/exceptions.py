@@ -1,0 +1,2 @@
+class HeroError(Exception):
+    pass

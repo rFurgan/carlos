@@ -32,17 +32,24 @@ class CalculatedData(NamedTuple):
     angle_to_hero: int
 
 
-class HeroData(NamedTuple):
-    distance_to_hero: float
-    angle_to_hero: int
-
-
 class Data(NamedTuple):
     id: int
     timestamp: float
     data: CalculatedData
 
 
+class Recent(NamedTuple):
+    previous: any
+    current: any
+
+
+# TODO Check
+class HeroData(NamedTuple):
+    distance_to_hero: float
+    angle_to_hero: int
+
+
+# TODO Check
 class CloseTimestamp(NamedTuple):
     timestamp: float
     type: ETimestampType
