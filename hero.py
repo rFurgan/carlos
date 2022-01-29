@@ -1,4 +1,4 @@
-from recent_data import RecentData
+from database.recent_data import RecentData
 from common.datatypes import Data, ETimestampType, Geoposition
 from common.operations import Operations
 from scipy import interpolate
