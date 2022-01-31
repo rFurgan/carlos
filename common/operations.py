@@ -7,9 +7,9 @@ class Operations:
     @staticmethod
     def get_vector(point, foot):
         return Vector(
-            x=point.longitude - foot.longitude,
-            y=point.latitude - foot.latitude,
-            z=point.altitude - foot.altitude,
+            x=point.x - foot.x,
+            y=point.y - foot.y,
+            z=point.z - foot.z,
         )
 
     @staticmethod
@@ -35,15 +35,11 @@ class Operations:
 
     @staticmethod
     def get_vector_length(vector):
-        # Altitude / z coordinate is troublesome in CARLA
-        # Changes on flat road and falsifies the calculations
-        # return round(sqrt((vector.x ** 2) + (vector.y ** 2) + (vector.z ** 2)))
-        return round(sqrt((vector.x ** 2) + (vector.y ** 2)))
+        return round(sqrt((vector.x ** 2) + (vector.y ** 2) + (vector.z ** 2)))
 
     @staticmethod
     def get_cross_product(vector_1, vector_2):
         return (
-            # TODO check if this is also troublesome with z-axis
             vector_1.x * vector_2.x + vector_1.y * vector_2.y + vector_1.z * vector_2.z
         )
 

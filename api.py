@@ -44,9 +44,8 @@ class Api:
             ):
                 self._gnss_receivers.append(
                     GnssReceiver(
-                        actor=actor,
-                        world=self._world,
-                        on_data=self._hero.on_position_data,
-                        sensor_tick=1,
+                        actor,
+                        self._hero.on_position_data,
+                        2,
                     )
                 )

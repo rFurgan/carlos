@@ -12,7 +12,8 @@ def change_world(host="127.0.0.1", port=2000):
         client.load_world("Town01")
     except RuntimeError:
         print(f"[ERROR] Failed to connect to CARLA world ${host}:${port}.")
-        exit()
+        # exit()
+
 
 # TODO delete
 # DEBUG
@@ -32,6 +33,7 @@ def get_a_hero(host="127.0.0.1", port=2000):
 
 if __name__ == "__main__":
     # change_world()
+    # sleep(10)
     api = Api(get_a_hero())
-    sleep(10)
+    sleep(100)
     del api
