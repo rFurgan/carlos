@@ -1,9 +1,9 @@
 from time import sleep
-from api.api import Api
 from carla import Client
 from common import EActorType, LOCAL_PORT, LOCAL_HOST
 import logging
 import json
+import api
 
 
 # DEBUG
