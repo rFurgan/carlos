@@ -39,4 +39,5 @@ def get_angle_to_y_axis(v):
 def get_angle_between_vectors(a, b):
     dot = get_dot_product(a, b)
     det = get_determinant(a, b)
-    return int(degrees(atan2(det, dot)))
+    angle = int(degrees(atan2(det, dot)))
+    return angle if angle >= 0 else 360 + angle

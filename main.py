@@ -1,9 +1,9 @@
+from api import Api
 from time import sleep
 from carla import Client
 from common import EActorType, LOCAL_PORT, LOCAL_HOST
 import logging
 import json
-import api
 
 
 # DEBUG
@@ -35,7 +35,7 @@ def get_a_hero(host, port):
 def pretty_print(json_data):
     data = json.loads(json_data)
     print(
-        f"{data['id']}\nType: {data['type']}\nTimestamp: {data['timestamp']}\nVelocity: {data['data']['velocity']}\nOrientation: {data['data']['orientation']}\n----"
+        f"ID: {data['id']}\nO: {data['data']['orientation']}\nV: {data['data']['velocity']}\nD: {data['data']['distance_to_hero']}\nA: {data['data']['angle_to_hero']}\n-------"
     )
 
 

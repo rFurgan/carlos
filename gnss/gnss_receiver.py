@@ -9,7 +9,7 @@ class GnssReceiver:
         self,
         actor,
         on_data,
-        sensor_tick=1,
+        sensor_tick,
     ):
         self._actor = actor
         self._on_data = on_data

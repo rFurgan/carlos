@@ -1,7 +1,7 @@
 import logging
-from actor.hero import Hero
+from actor import Hero
 from carla import Client
-from actor.gnss_receiver import GnssReceiver
+from gnss import GnssReceiver
 from common import EActorType
 
 
@@ -33,15 +33,13 @@ class Api:
     def subscribe(self, callback):
         self._subscribers.append(callback)
 
-    # TODO
-    # Create Access to database
-    # Create database
+    # TODO Create database and access to it
 
     def _register_hero(self, hero_id):
         hero = self._world.get_actor(hero_id)
         if hero == None or not EActorType.VEHICLE.value in hero.type_id:
             raise (ValueError)
-        self._hero = Hero(hero_id, self._subscribers)
+        self._hero = Hero(hero_id, 150, self._subscribers)
 
     def _register_gnss_receivers(self):
         for actor in self._world.get_actors():

@@ -1,4 +1,4 @@
-from .enums import EVehicleType
+from common import EVehicleType
 
 
 class VehicleTypes:
