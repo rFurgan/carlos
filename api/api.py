@@ -1,9 +1,8 @@
 import mariadb
 import logging
 import sys
-from actor import Hero
+from actor import Hero, GnssReceiver
 from carla import Client
-from gnss import GnssReceiver
 from common import EActorType
 
 

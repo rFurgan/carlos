@@ -1,7 +1,6 @@
 from .recent_data import RecentData
 from scipy import interpolate
-from common import Coordinate
-import operations as op
+from common import Coordinate, Operations
 import json
 
 
@@ -158,8 +157,8 @@ class Hero:
         )
 
     def _get_distance_to_hero(self, position_hero, position_other):
-        vector = op.vector(position_hero, position_other)
-        return op.vector_length(vector)
+        vector = vector(position_hero, position_other)
+        return Operations.vector_length(vector)
 
     def _get_angle_to_hero(
         self,
@@ -167,6 +166,6 @@ class Hero:
         position_hero_now,
         position_other,
     ):
-        vector_hero = op.vector(position_hero_now, position_hero_before)
-        vector_hero_other = op.vector(position_other, position_hero_before)
-        return op.angle_between_vectors(vector_hero, vector_hero_other)
+        vector_hero = Operations.vector(position_hero_now, position_hero_before)
+        vector_hero_other = Operations.vector(position_other, position_hero_before)
+        return Operations.angle_between_vectors(vector_hero, vector_hero_other)

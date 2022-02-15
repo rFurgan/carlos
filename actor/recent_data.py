@@ -1,5 +1,4 @@
-from common import Recent, MAX_STORE_SIZE
-import operations as op
+from common import Recent, Operations, MAX_STORE_SIZE
 
 
 class RecentData:
@@ -31,16 +30,16 @@ class RecentData:
 
             if self._position.current == None or self._position.previous == None:
                 return None, None
-            vector = op.vector(self._position.current, self._position.previous)
+            vector = Operations.vector(self._position.current, self._position.previous)
             return self._get_orientation(vector), self._get_velocity(vector)
         return None, None
 
     def _get_velocity(self, vector):
         time_difference = abs(self._timestamp.previous - self._timestamp.current)
-        return op.velocity(vector, time_difference)
+        return Operations.velocity(vector, time_difference)
 
     def _get_orientation(self, vector):
-        orientation = op.angle_to_y_axis(vector)
+        orientation = Operations.angle_to_y_axis(vector)
         if orientation != None:
             self._orientation = orientation
         return orientation if orientation != None else self._orientation
