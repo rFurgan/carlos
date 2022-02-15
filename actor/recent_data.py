@@ -31,16 +31,16 @@ class RecentData:
 
             if self._position.current == None or self._position.previous == None:
                 return None, None
-            vector = op.get_vector(self._position.current, self._position.previous)
+            vector = op.vector(self._position.current, self._position.previous)
             return self._get_orientation(vector), self._get_velocity(vector)
         return None, None
 
     def _get_velocity(self, vector):
         time_difference = abs(self._timestamp.previous - self._timestamp.current)
-        return op.get_velocity(vector, time_difference)
+        return op.velocity(vector, time_difference)
 
     def _get_orientation(self, vector):
-        orientation = op.get_angle_to_y_axis(vector)
+        orientation = op.angle_to_y_axis(vector)
         if orientation != None:
             self._orientation = orientation
         return orientation if orientation != None else self._orientation

@@ -6,10 +6,12 @@ import json
 
 
 class Hero:
-    def __init__(self, id, relevance_radius, subscribers):
+    def __init__(self, id, relevance_radius, subscribers, cursor, database):
         self._id = id
         self._relevance_radius = relevance_radius
         self._subscribers = subscribers
+        self._cursor = cursor
+        self._database = database
         self._recent_data = {}
         self._stop = False
         self._type = None
@@ -23,6 +25,10 @@ class Hero:
             distance_to_hero, angle_to_hero = self._hero_dependent_data(id, timestamp)
         if distance_to_hero != None and distance_to_hero >= self._relevance_radius:
             return
+        # self._cursor.execute(
+        #     f"INSERT INTO actor_{id} VALUES({timestamp}, {orientation if orientation != None else 'NULL'}, {velocity if velocity != None else 'NULL'}, {distance_to_hero if distance_to_hero != None else 'NULL'}, {angle_to_hero if angle_to_hero != None else 'NULL'})"
+        # )
+        # self._database.commit()
         for subscriber in self._subscribers:
             subscriber(
                 json.dumps(
@@ -39,7 +45,6 @@ class Hero:
                     }
                 )
             )
-        # TODO Write into database
 
     def _hero_dependent_data(self, id, timestamp):
         position_other = self._predict_position(id, timestamp)
@@ -153,8 +158,8 @@ class Hero:
         )
 
     def _get_distance_to_hero(self, position_hero, position_other):
-        vector = op.get_vector(position_hero, position_other)
-        return op.get_vector_length(vector)
+        vector = op.vector(position_hero, position_other)
+        return op.vector_length(vector)
 
     def _get_angle_to_hero(
         self,
@@ -162,6 +167,6 @@ class Hero:
         position_hero_now,
         position_other,
     ):
-        vector_hero = op.get_vector(position_hero_now, position_hero_before)
-        vector_hero_other = op.get_vector(position_other, position_hero_before)
-        return op.get_angle_between_vectors(vector_hero, vector_hero_other)
+        vector_hero = op.vector(position_hero_now, position_hero_before)
+        vector_hero_other = op.vector(position_other, position_hero_before)
+        return op.angle_between_vectors(vector_hero, vector_hero_other)
