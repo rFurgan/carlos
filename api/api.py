@@ -1,23 +1,29 @@
 import mariadb
 import logging
 import sys
-from actor import Hero, GnssReceiver
+import time
+from datetime import datetime
+from actor import Hero
 from carla import Client
-from common import EActorType
+from common import VehicleTypes, EActorType, Coordinate
+from threading import Thread
 
 
 class Api:
     def __init__(self):
-        self._gnss_receivers = []
         self._subscribers = []
         self._hero = None
         self._cursor = None
         self._database = None
+        self._thread = None
+        self._stop = False
 
     def __del__(self):
-        for gnss_receiver in self._gnss_receivers:
-            gnss_receiver.stop()
-        self._database.close()
+        self._stop = True
+        if self._database != None:
+            self._database.close()
+        if self._thread != None:
+            self._thread.join()
 
     def subscribe(self, callback):
         self._subscribers.append(callback)
@@ -40,8 +46,11 @@ class Api:
         )
         self._cursor = self._database.cursor()
         self._create_database(db_override, db_name)
+        self._register_types()
         self._register_hero(hero_id)
-        self._register_gnss_receivers()
+        self._thread = Thread(target=self._register_gnss_receivers)
+        self._thread.daemon = True
+        self._thread.start()
         return self._database
 
     def _connect_to_simulation(self, host, port):
@@ -83,19 +92,51 @@ class Api:
             raise (ValueError)
         self._hero = Hero(hero_id, 150, self._subscribers, self._cursor, self._database)
 
-    def _register_gnss_receivers(self):
+    def _register_types(self):
+        self._cursor.execute(
+            f"CREATE TABLE IF NOT EXISTS actors (pkId VARCHAR(255) NOT NULL, type VARCHAR(255) NOT NULL, PRIMARY KEY (pkId));"
+        )
         for actor in self._world.get_actors():
-            if (
-                EActorType.VEHICLE.value in actor.type_id
-                or EActorType.PEDESTRIAN.value in actor.type_id
-            ):
-                self._cursor.execute(
-                    f"CREATE TABLE IF NOT EXISTS actor_{actor.id} (pkTimestamp FLOAT NOT NULL, orientation INT, velocity INT, distance_to_hero INT, angle_to_hero INT, PRIMARY KEY (pkTimestamp));"
-                )
-                self._gnss_receivers.append(
-                    GnssReceiver(
-                        actor,
-                        self._hero.on_position_data,
-                        0.5,
+            self._cursor.execute(
+                f"INSERT INTO actors VALUES('{actor.id}', '{self._classify(actor.type_id)}')"
+            )
+        self._database.commit()
+
+    def _register_gnss_receivers(self):
+        tick = 0.5
+        while not self._stop:
+            current_time = round(time.time(), 3)
+            time_now = datetime.now()
+            for actor in self._world.get_actors():
+                if (
+                    EActorType.VEHICLE.value in actor.type_id
+                    or EActorType.PEDESTRIAN.value in actor.type_id
+                ):
+                    self._cursor.execute(
+                        f"CREATE TABLE IF NOT EXISTS actor_{actor.id} (pkTimestamp FLOAT NOT NULL, orientation INT, velocity INT, distance_to_hero INT, angle_to_hero INT, PRIMARY KEY (pkTimestamp));"
                     )
-                )
+                    location = actor.get_transform().location
+                    timestamp = time_now.second + round(
+                        time_now.microsecond / 1000000, 3
+                    )
+                    self._hero.on_position_data(
+                        actor.id,
+                        self._classify(actor.type_id),
+                        timestamp,
+                        Coordinate(
+                            x=location.x,
+                            y=location.y,
+                            z=location.z,
+                        ),
+                    )
+            rest_time = round(time.time(), 3) - current_time
+            rest_sleep = tick - rest_time
+            if rest_sleep > 0:
+                time.sleep(tick)
+
+    def _classify(self, actor_type):
+        for category in list(VehicleTypes.types.keys()):
+            for type in VehicleTypes.types[category]:
+                if type in actor_type:
+                    return category.value
+        return EActorType.PEDESTRIAN.value

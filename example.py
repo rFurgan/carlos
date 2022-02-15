@@ -46,7 +46,7 @@ def pretty_print(json_data):
 if __name__ == "__main__":
     api = Api()
     # change_world("Town02", LOCAL_HOST, LOCAL_PORT)
-    # input("Continue?")
+    input("Wait until map changed and spawn the actors. Now press any key to continue")
     api.start(
         hero_id=get_a_hero_id(c.LOCAL_HOST, c.LOCAL_PORT),
         sim_host=LOCAL_HOST,
@@ -57,6 +57,6 @@ if __name__ == "__main__":
         db_port=c.DB_PORT,
         db_override=True,
     )
-    api.subscribe(pretty_print)
+    # api.subscribe(pretty_print)
     input("Press any key to end")
     del api

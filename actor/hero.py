@@ -1,6 +1,6 @@
 from .recent_data import RecentData
 from scipy import interpolate
-from common import Coordinate, Operations
+from common import Coordinate, vector_length, vector, angle_between_vectors
 import json
 
 
@@ -24,10 +24,10 @@ class Hero:
             distance_to_hero, angle_to_hero = self._hero_dependent_data(id, timestamp)
         if distance_to_hero != None and distance_to_hero >= self._relevance_radius:
             return
-        # self._cursor.execute(
-        #     f"INSERT INTO actor_{id} VALUES({timestamp}, {orientation if orientation != None else 'NULL'}, {velocity if velocity != None else 'NULL'}, {distance_to_hero if distance_to_hero != None else 'NULL'}, {angle_to_hero if angle_to_hero != None else 'NULL'})"
-        # )
-        # self._database.commit()
+        self._cursor.execute(
+            f"INSERT INTO actor_{id} VALUES({timestamp}, {orientation if orientation != None else 'NULL'}, {velocity if velocity != None else 'NULL'}, {distance_to_hero if distance_to_hero != None else 'NULL'}, {angle_to_hero if angle_to_hero != None else 'NULL'})"
+        )
+        self._database.commit()
         for subscriber in self._subscribers:
             subscriber(
                 json.dumps(
@@ -157,8 +157,8 @@ class Hero:
         )
 
     def _get_distance_to_hero(self, position_hero, position_other):
-        vector = vector(position_hero, position_other)
-        return Operations.vector_length(vector)
+        vec = vector(position_hero, position_other)
+        return vector_length(vec)
 
     def _get_angle_to_hero(
         self,
@@ -166,6 +166,6 @@ class Hero:
         position_hero_now,
         position_other,
     ):
-        vector_hero = Operations.vector(position_hero_now, position_hero_before)
-        vector_hero_other = Operations.vector(position_other, position_hero_before)
-        return Operations.angle_between_vectors(vector_hero, vector_hero_other)
+        vector_hero = vector(position_hero_now, position_hero_before)
+        vector_hero_other = vector(position_other, position_hero_before)
+        return angle_between_vectors(vector_hero, vector_hero_other)
