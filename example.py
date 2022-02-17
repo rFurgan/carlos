@@ -1,12 +1,11 @@
 from api import Api
 from carla import Client
-import common as c
+import common
 import logging
 import json
+import time
 
-from common.constants import LOCAL_HOST, LOCAL_PORT
 
-# DEBUG
 def change_world(map, host, port):
     try:
         client = Client(host, port)
@@ -18,24 +17,6 @@ def change_world(map, host, port):
         )
 
 
-# DEBUG
-def get_a_hero_id(host, port):
-    try:
-        client = Client(host, port)
-        client.set_timeout(2.0)
-        world = client.get_world()
-        for actor in world.get_actors():
-            if c.EActorType.VEHICLE.value in actor.type_id:
-                return actor.id
-        raise RuntimeError("No actors found to assign hero")
-    except RuntimeError as error:
-        logging.error(
-            f"Failed to connect to CARLA world {host}:{port} due to error: {error}"
-        )
-        exit()
-
-
-# DEBUG
 def pretty_print(json_data):
     data = json.loads(json_data)
     print(
@@ -44,19 +25,16 @@ def pretty_print(json_data):
 
 
 if __name__ == "__main__":
-    api = Api()
-    # change_world("Town02", LOCAL_HOST, LOCAL_PORT)
-    input("Wait until map changed and spawn the actors. Now press any key to continue")
-    api.start(
-        hero_id=get_a_hero_id(c.LOCAL_HOST, c.LOCAL_PORT),
-        sim_host=LOCAL_HOST,
-        sim_port=c.LOCAL_PORT,
-        db_user=c.DB_USER,
-        db_password=c.DB_PASSWORD,
-        db_host=c.DB_HOST,
-        db_port=c.DB_PORT,
-        db_override=True,
-    )
-    # api.subscribe(pretty_print)
-    input("Press any key to end")
-    del api
+    if input("Change map?") == "y":
+        change_world("Town02", common.LOCAL_HOST, common.LOCAL_PORT)
+        input(
+            "Wait until map changed and spawn the actors. Now press any key to continue"
+        )
+    a = Api(common.LOCAL_HOST, common.LOCAL_PORT)
+    # input("Press ENTER to end")
+    a.start(0.5)
+    for i in range(300):
+        time.sleep(6)
+        a.save_csv()
+        print(f"SAVE {i}")
+    a.stop()

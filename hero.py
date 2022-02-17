@@ -1,54 +1,38 @@
-from .recent_data import RecentData
+from recent_data import RecentData
 from scipy import interpolate
-from common import Coordinate, vector_length, vector, angle_between_vectors
-import json
+from common import Coordinate
+import math_operations as mo
+import logging
 
 
 class Hero:
-    def __init__(self, id, relevance_radius, subscribers, cursor, database):
-        self._id = id
-        self._relevance_radius = relevance_radius
-        self._subscribers = subscribers
-        self._cursor = cursor
-        self._database = database
+    def __init__(self, hero_id, actors):
+        self._hero_id = hero_id
+        self._actors = actors
         self._recent_data = {}
-        self._stop = False
-        self._type = None
+        self._relevance_radius = 100
 
-    def on_position_data(self, id, type, timestamp, position):
+    def on_position_data(self, id, timestamp, position):
         if id not in self._recent_data:
-            self._recent_data[id] = RecentData()
-        orientation, velocity = self._recent_data[id].update(timestamp, position)
-        distance_to_hero, angle_to_hero = None, None
-        if id != self._id:
-            distance_to_hero, angle_to_hero = self._hero_dependent_data(id, timestamp)
-        if distance_to_hero != None and distance_to_hero >= self._relevance_radius:
-            return
-        self._cursor.execute(
-            f"INSERT INTO actor_{id} VALUES({timestamp}, {orientation if orientation != None else 'NULL'}, {velocity if velocity != None else 'NULL'}, {distance_to_hero if distance_to_hero != None else 'NULL'}, {angle_to_hero if angle_to_hero != None else 'NULL'})"
+            self._recent_data[id] = RecentData(3)
+        velocity, orientation, angular_speed = self._recent_data[id].update(
+            timestamp, position
         )
-        self._database.commit()
-        for subscriber in self._subscribers:
-            subscriber(
-                json.dumps(
-                    {
-                        "id": id,
-                        "type": type,
-                        "timestamp": timestamp,
-                        "data": {
-                            "orientation": orientation,
-                            "velocity": velocity,
-                            "distance_to_hero": distance_to_hero,
-                            "angle_to_hero": angle_to_hero,
-                        },
-                    }
-                )
+        if id != self._hero_id:
+            distance_to_hero, angle_to_hero = self._hero_dependent_data(id, timestamp)
+        else:
+            distance_to_hero, angle_to_hero = None, None
+        try:
+            self._actors[id].add_data(
+                velocity, orientation, angular_speed, distance_to_hero, angle_to_hero
             )
+        except KeyError:
+            logging.warn(f"Failed to add data for actor {id}")
 
     def _hero_dependent_data(self, id, timestamp):
         position_other = self._predict_position(id, timestamp)
         position_hero_now, position_hero_before = self._predict_positions(
-            self._id, timestamp - 0.5, timestamp
+            self._hero_id, timestamp - 0.5, timestamp
         )
         if (
             position_hero_before == None and position_hero_now == None
@@ -64,6 +48,8 @@ class Hero:
         )
 
     def _predict_position(self, id, timestamp):
+        if not (id in self._recent_data):
+            return None
         stored_data = self._recent_data[id].stored
         timestamps = sorted(stored_data, reverse=True)
         if len(timestamps) <= 1:
@@ -157,8 +143,8 @@ class Hero:
         )
 
     def _get_distance_to_hero(self, position_hero, position_other):
-        vec = vector(position_hero, position_other)
-        return vector_length(vec)
+        vec = mo.vector(position_hero, position_other)
+        return mo.vector_length(vec)
 
     def _get_angle_to_hero(
         self,
@@ -166,6 +152,6 @@ class Hero:
         position_hero_now,
         position_other,
     ):
-        vector_hero = vector(position_hero_now, position_hero_before)
-        vector_hero_other = vector(position_other, position_hero_before)
-        return angle_between_vectors(vector_hero, vector_hero_other)
+        vector_hero = mo.vector(position_hero_now, position_hero_before)
+        vector_hero_other = mo.vector(position_other, position_hero_before)
+        return mo.angle_between_vectors(vector_hero, vector_hero_other)

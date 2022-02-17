@@ -80,3 +80,6 @@ class Recent:
     @current.setter
     def current(self, current):
         self._current = current
+
+    def has_none(self):
+        return self._current == None or self._previous == None
