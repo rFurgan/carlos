@@ -6,7 +6,7 @@ import math_operations as mo
 from hero import Hero
 from actor import Actor
 from carla import Client
-from common import EActorType, Coordinate, VehicleTypes
+from common import EActorType, Coordinate, VehicleTypes, ROAD_USER_CODE
 from datetime import datetime
 from threading import Thread
 
@@ -18,6 +18,7 @@ class Api:
         self._stop = False
         self._thread = None
         self._hero = None
+        self._header_written = False
         try:
             client = Client(host, port)
             client.set_timeout(2.0)
@@ -53,7 +54,9 @@ class Api:
     def save_csv(self):
         with open(r"C:\Users\daydr\Desktop\data.csv", "a+", encoding="UTF-8") as f:
             writer = csv.writer(f)
-            # writer.writerow(self._header())
+            if not self._header_written:
+                writer.writerow(self._header())
+                self._header_written = True
             for actor_id in self._actors:
                 writer.writerow(self._actors[actor_id].get_data())
 
@@ -97,5 +100,5 @@ class Api:
         for category in list(VehicleTypes.types.keys()):
             for type in VehicleTypes.types[category]:
                 if type in actor_type:
-                    return category.value
-        return EActorType.PEDESTRIAN.value
+                    return ROAD_USER_CODE[category]
+        return ROAD_USER_CODE[EActorType.PEDESTRIAN]
