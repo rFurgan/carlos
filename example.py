@@ -20,7 +20,7 @@ def change_world(map, host, port):
         client.load_world(map)
     except RuntimeError as error:
         logging.error(
-            f"Failed to connect to CARLA world {host}:{port} due to error: {error}"
+            f"Failed to connect to CARLA world {host}:{port} due to error: {error.message}"
         )
 
 

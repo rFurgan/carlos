@@ -2,13 +2,16 @@ from recent_data import RecentData
 from scipy import interpolate
 from common import Coordinate
 import math_operations as mo
+import json
+import logging
 
 
 class Hero:
     """Class that represents the hero ("the vehicle on which the software is running") and does all the calculations with the position data received"""
-    def __init__(self, hero_id, actors, relevance_radius):
+    def __init__(self, hero_id, actors, subscribers, relevance_radius):
         self._hero_id = hero_id
         self._actors = actors
+        self._subscribers = subscribers
         self._recent_data = {}
         self._relevance_radius = relevance_radius
 
@@ -33,6 +36,11 @@ class Hero:
             self._actors[id].add_data(
                 velocity, orientation, angular_speed, distance_to_hero, angle_to_hero
             )
+            try:
+                for subscriber in self._subscribers:
+                    subscriber(json.dumps([id, velocity, orientation, angular_speed, distance_to_hero, angle_to_hero]))
+            except Exception as error:
+                logging.error(f"An error occurred when notifying a subscriber: {error.message}")
 
     def _hero_dependent_data(self, id, timestamp):
         """Method that calculates and returns hero dependent data (distance to hero and angle to hero)

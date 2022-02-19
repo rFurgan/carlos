@@ -28,6 +28,7 @@ class Api:
     def __init__(self, host, port, relevance_radius, max_entry_count):
         self._actors = {}
         self._road_users = []
+        self._subscribers = []
         self._stop = False
         self._thread = None
         self._hero = None
@@ -39,7 +40,7 @@ class Api:
             client.set_timeout(2.0)
             world = client.get_world()
         except RuntimeError as error:
-            logging.error(f"Something went wrong connecting: {error}")
+            logging.error(f"Something went wrong connecting: {error.message}")
             sys.exit(1)
         for actor in world.get_actors():
             if (
@@ -47,7 +48,7 @@ class Api:
                 or EActorType.PEDESTRIAN.value in actor.type_id
             ):
                 if self._hero == None and mo.vector_length(actor.get_velocity()) > 0:
-                    self._hero = Hero(actor.id, self._actors, self._relevance_radius)
+                    self._hero = Hero(actor.id, self._actors, self._subscribers, self._relevance_radius)
                 self._road_users.append(actor)
                 self._actors[actor.id] = Actor(
                     actor.id, self._classify_type(actor.type_id), self._max_entry_count
@@ -90,6 +91,25 @@ class Api:
                 self._header_written = True
             for actor_id in self._actors:
                 writer.writerow(self._actors[actor_id].get_data())
+
+    def subscribe(self, callback):
+        """Method to add callback function to which the calculated data will be forwarded to in runtime
+
+        Args:
+            callback (function): Callback function with one argument holding the data in JSON format
+        """
+        self._subscribers.append(callback)
+
+    def unsubscribe(self, callback):
+        """Method to remove callback function to which the calculated data is forwarded to in runtime
+
+        Args:
+            callback (function): Callback function that should be removed
+        """
+        for index in range(len(self._subscribers)):
+            if self._subscribers[index] == callback:
+                self._subscribers.pop(index)
+                break
 
     def _header(self):
         """Creates a header line for the created CSV file
