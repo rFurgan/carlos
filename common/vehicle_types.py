@@ -2,6 +2,12 @@ from common import EVehicleType
 
 
 class VehicleTypes:
+    """
+    Class that holds all the traffic user types given in Carla version 0.9.12
+
+    Attributes:
+        types (dict[EVehicleType, str]): Dictionary with vehicle types and all vehicle names of the corresponding type
+    """
     types = {
         EVehicleType.CAR: [
             "audi.a2",

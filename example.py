@@ -7,6 +7,13 @@ import time
 
 
 def change_world(map, host, port):
+    """Method to change Carla world to the provided map
+
+    Args:
+        map (str): Map to change to
+        host (str): Host adress of the Carla world
+        port (int): Port adress of the Carla world
+    """
     try:
         client = Client(host, port)
         client.set_timeout(2.0)
@@ -17,24 +24,17 @@ def change_world(map, host, port):
         )
 
 
-def pretty_print(json_data):
-    data = json.loads(json_data)
-    print(
-        f"ID: {data['id']}\nO: {data['data']['orientation']}\nV: {data['data']['velocity']}\nD: {data['data']['distance_to_hero']}\nA: {data['data']['angle_to_hero']}\n-------"
-    )
-
-
 if __name__ == "__main__":
     if input("Change map?") == "y":
         change_world("Town02", common.LOCAL_HOST, common.LOCAL_PORT)
         input(
             "Wait until map changed and spawn the actors. Now press any key to continue"
         )
-    a = Api(common.LOCAL_HOST, common.LOCAL_PORT)
-    # input("Press ENTER to end")
+    a = Api(common.LOCAL_HOST, common.LOCAL_PORT, 50000, 10)
     a.start(0.5)
-    for i in range(300):
-        time.sleep(6)
-        a.save_csv()
-        print(f"SAVE {i}")
+    input("Press ENTER to end")
+    # for i in range(300):
+    #     time.sleep(6)
+    #     a.save_csv(r"C:\Users\Pepe\Desktop", "data.csv")
+    #     print(f"SAVE {i}")
     a.stop()
