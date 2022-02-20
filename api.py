@@ -174,7 +174,7 @@ class Api:
         Returns:
             int: Encoded traffic user type
         """
-        for category in list(VehicleTypes.types.keys()):
+        for category in VehicleTypes.categories:
             for type in VehicleTypes.types[category]:
                 if type in actor_type:
                     return ROAD_USER_CODE[category]

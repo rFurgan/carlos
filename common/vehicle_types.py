@@ -6,8 +6,10 @@ class VehicleTypes:
     Class that holds all the traffic user types given in Carla version 0.9.12
 
     Attributes:
+        categories (Array[EVehicleType]): Array of all vehicle types
         types (dict[EVehicleType, str]): Dictionary with vehicle types and all vehicle names of the corresponding type
     """
+    categories = [EVehicleType.CAR, EVehicleType.BIKE, EVehicleType.MOTORCYCLE, EVehicleType.TRUCK]
     types = {
         EVehicleType.CAR: [
             "audi.a2",
