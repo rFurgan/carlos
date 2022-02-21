@@ -4,6 +4,7 @@ import time
 import csv
 import carla
 import pathlib
+import random
 import math_operations as mo
 from hero import Hero
 from actor import Actor
@@ -59,16 +60,17 @@ class Api:
                     actor.id, self._classify_type(actor.type_id), self._max_entry_count
                 )
 
-    def start(self, tick: float) -> None:
+    def start(self, tick: float, error_range: float = 0) -> None:
         """Method to start a thread to poll and calulate the data of all present actors in the connected Carla world
 
         Args:
             tick (float): Time in seconds how often the position of the actors is to be polled
+            error_range (float, optional): Range from which a random error is generated that falsifies the positions
         """
         if self._hero == None:
             logging.error("No Hero initialized or found")
             sys.exit(1)
-        self._thread = Thread(target=self._poll_data, args=[tick])
+        self._thread = Thread(target=self._poll_data, args=[tick, error_range])
         self._thread.daemon = True
         self._thread.start()
 
@@ -144,12 +146,16 @@ class Api:
             header.append(f"{data_type}_{count}")
         return header
 
-    def _poll_data(self, tick: float) -> float:
+    def _poll_data(self, tick: float, error_range: float) -> float:
         """Method to run a loop to poll position of each found traffic user in the connected Carla world and calculate their data in a specified time interval
 
         Args:
             tick (float): Time in seconds how much time should pass until the next poll starts
+            error_range (float): Range from which a random error is generated that falsifies the positions
         """
+
+        distortion = lambda _ : round(random.uniform(-_, _), 3)
+
         while not self._stop:
             current_time: float = round(time.time(), 3)
             time_now: datetime = datetime.now()
@@ -160,9 +166,9 @@ class Api:
                     actor.id,
                     timestamp,
                     Coordinate(
-                        x=location.x,
-                        y=location.y,
-                        z=location.z,
+                        x=location.x + distortion(error_range),
+                        y=location.y + distortion(error_range),
+                        z=location.z + distortion(error_range),
                     ),
                 )
             rest_time: float = round(time.time(), 3) - current_time
