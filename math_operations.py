@@ -1,8 +1,8 @@
-from common import Vector, Y_AXIS
+from common import Vector, Y_AXIS, Coordinate
 from math import atan2, degrees, sqrt
+from typing import Union
 
-
-def vector(point, foot):
+def vector(point: Coordinate, foot: Coordinate) -> Vector:
     """Converts and returns a vector from the two given points 
 
     Args:
@@ -19,7 +19,7 @@ def vector(point, foot):
     )
 
 
-def dot_product(vector_a, vector_b):
+def dot_product(vector_a: Vector, vector_b: Vector) -> float:
     """Calculates and returns the dot product of two given vectors 
 
     Args:
@@ -32,7 +32,7 @@ def dot_product(vector_a, vector_b):
     return vector_a.x * vector_b.x + vector_a.y * vector_b.y
 
 
-def determinant(vector_a, vector_b):
+def determinant(vector_a: Vector, vector_b: Vector) -> float:
     """Calculates and returns the determinant of two given vectors 
 
     Args:
@@ -45,7 +45,7 @@ def determinant(vector_a, vector_b):
     return vector_a.x * vector_b.y - vector_a.y * vector_b.x
 
 
-def vector_length(vector_v):
+def vector_length(vector_v: Vector) -> float:
     """Calculates and returns the of the given vectors 
 
     Args:
@@ -57,7 +57,7 @@ def vector_length(vector_v):
     return round(sqrt((vector_v.x ** 2) + (vector_v.y ** 2) + (vector_v.z ** 2)), 2)
 
 
-def velocity(vector_v, t_before, t_after):
+def velocity(vector_v: Vector, t_before: float, t_after: float) -> float:
     """Calculates and returns the velocity from the given vector and timestamps (in km/h)
 
     Args:
@@ -68,12 +68,12 @@ def velocity(vector_v, t_before, t_after):
     Returns:
         float: Velocity from the given vector and timestamps (in km/h)
     """
-    delta_t = abs(t_after - t_before)
-    d = vector_length(vector_v)
+    delta_t: float = abs(t_after - t_before)
+    d: float = vector_length(vector_v)
     return round((d / delta_t) * 3.6, 2)
 
 
-def angle_to_y_axis(vector_v):
+def angle_to_y_axis(vector_v: Vector) -> Union[float, None]:
     """Calculates and returns the angle to y-axis (0-360 degrees)
 
     Args:
@@ -85,13 +85,13 @@ def angle_to_y_axis(vector_v):
     """
     if vector_v.x == 0 and vector_v.y == 0:
         return None
-    dot = dot_product(Y_AXIS, vector_v)
-    det = determinant(Y_AXIS, vector_v)
-    angle = round(degrees(atan2(det, dot)), 2)
+    dot: float = dot_product(Y_AXIS, vector_v)
+    det: float = determinant(Y_AXIS, vector_v)
+    angle: float = round(degrees(atan2(det, dot)), 2)
     return angle if angle >= 0 else 360 + angle
 
 
-def angle_between_vectors(vector_a, vector_b):
+def angle_between_vectors(vector_a: Vector, vector_b: Vector) -> float:
     """Calculates and returns the angle between two given vectors (0-360 degrees)
 
     Args:
@@ -101,13 +101,13 @@ def angle_between_vectors(vector_a, vector_b):
     Returns:
         float: Angle between the given vectors (0-360 degrees)
     """
-    dot = dot_product(vector_a, vector_b)
-    det = determinant(vector_a, vector_b)
-    angle = round(degrees(atan2(det, dot)), 2)
+    dot: float = dot_product(vector_a, vector_b)
+    det: float = determinant(vector_a, vector_b)
+    angle: float = round(degrees(atan2(det, dot)), 2)
     return angle if angle >= 0 else 360 + angle
 
 
-def angular_speed(angle_a, angle_b, t_before, t_after):
+def angular_speed(angle_a: float, angle_b: float, t_before: float, t_after: float) -> float:
     """Calculates and returns the angular speed between the given angles and the corresponding timestamps
 
     Args:
@@ -119,6 +119,6 @@ def angular_speed(angle_a, angle_b, t_before, t_after):
     Returns:
         float: Angular speed to turn from angle_a to angle_b between the given timestamps
     """
-    delta_theta = abs(angle_a - angle_b)
-    delta_t = abs(t_after - t_before)
+    delta_theta: float = abs(angle_a - angle_b)
+    delta_t: float = abs(t_after - t_before)
     return round(delta_theta / delta_t, 2)

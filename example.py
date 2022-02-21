@@ -1,12 +1,10 @@
-from api import Api
-from carla import Client
+import carla
 import common
 import logging
-import json
-import time
+from api import Api
 
 
-def change_world(map, host, port):
+def change_world(map: str, host: str, port: int) -> None:
     """Method to change Carla world to the provided map
 
     Args:
@@ -15,7 +13,7 @@ def change_world(map, host, port):
         port (int): Port adress of the Carla world
     """
     try:
-        client = Client(host, port)
+        client: carla.Client = carla.Client(host, port)
         client.set_timeout(2.0)
         client.load_world(map)
     except RuntimeError as error:
@@ -30,11 +28,8 @@ if __name__ == "__main__":
         input(
             "Wait until map changed and spawn the actors. Now press any key to continue"
         )
-    a = Api(common.LOCAL_HOST, common.LOCAL_PORT, 50000, 10)
+    a: Api = Api(common.LOCAL_HOST, common.LOCAL_PORT, 50000, 10)
     a.start(0.5)
     input("Press ENTER to end")
-    # for i in range(300):
-    #     time.sleep(6)
-    #     a.save_csv(r"C:\Users\Pepe\Desktop", "data.csv")
-    #     print(f"SAVE {i}")
+    a.save_csv(r"C:\Users\Pepe\Desktop", "data.csv")
     a.stop()

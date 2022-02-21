@@ -6,27 +6,27 @@ class Vector:
         y (float): y component of vector
         z (float): z component of vector
     """
-    def __init__(self, x, y, z):
-        self._x = x
-        self._y = y
-        self._z = z
+    def __init__(self, x: float, y: float, z: float) -> None:
+        self._x: float = x
+        self._y: float = y
+        self._z: float = z
 
     @property
-    def x(self):
+    def x(self) -> float:
         """
         Returns:
             float: x component of vector"""
         return self._x
 
     @property
-    def y(self):
+    def y(self) -> float:
         """
         Returns:
             float: y component of vector"""
         return self._y
 
     @property
-    def z(self):
+    def z(self) -> float:
         """
         Returns:
             float: z component of vector"""
@@ -41,27 +41,27 @@ class Coordinate:
         y (float): y component of coordinate
         z (float): z component of coordinate
     """
-    def __init__(self, x, y, z):
-        self._x = x
-        self._y = y
-        self._z = z
+    def __init__(self, x: float, y: float, z: float):
+        self._x: float = x
+        self._y: float = y
+        self._z: float = z
 
     @property
-    def x(self):
+    def x(self) -> float:
         """
         Returns:
             float: x component of coordinate"""
         return self._x
 
     @property
-    def y(self):
+    def y(self) -> float:
         """
         Returns:
             float: y component of coordinate"""
         return self._y
 
     @property
-    def z(self):
+    def z(self) -> float:
         """
         Returns:
             float: z component of coordinate"""
@@ -75,39 +75,39 @@ class Recent:
         previous (any): Previous data
         previous (any): Most recent data
     """
-    def __init__(self, previous, current):
-        self._previous = previous
-        self._current = current
+    def __init__(self, previous: any, current: any) -> None:
+        self._previous: any = previous
+        self._current: any = current
 
     @property
-    def previous(self):
+    def previous(self) -> any:
         """
         Returns:
-            float: Previously stored data"""
+            any: Previously stored data"""
         return self._previous
 
     @property
-    def current(self):
+    def current(self) -> any:
         """
         Returns:
-            float: Most recently stored data"""
+            any: Most recently stored data"""
         return self._current
 
     @previous.setter
-    def previous(self, previous):
+    def previous(self, previous: any) -> None:
         """
         Args:
             previous (any): Value to set previous"""
         self._previous = previous
 
     @current.setter
-    def current(self, current):
+    def current(self, current: any) -> None:
         """
         Args:
             current (any): Value to set current"""
         self._current = current
 
-    def has_none(self):
+    def has_none(self) -> bool:
         """Check if either previous or current is set to None
         
         Returns:

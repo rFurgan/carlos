@@ -1,4 +1,5 @@
 from common import EVehicleType
+from typing import List, Dict
 
 
 class VehicleTypes:
@@ -6,11 +7,11 @@ class VehicleTypes:
     Class that holds all the traffic user types given in Carla version 0.9.12
 
     Attributes:
-        categories (Array[EVehicleType]): Array of all vehicle types
-        types (dict[EVehicleType, str]): Dictionary with vehicle types and all vehicle names of the corresponding type
+        categories (List[EVehicleType]): Array of all vehicle types
+        types (Dict[EVehicleType, str]): Dictionary with vehicle types and all vehicle names of the corresponding type
     """
-    categories = [EVehicleType.CAR, EVehicleType.BIKE, EVehicleType.MOTORCYCLE, EVehicleType.TRUCK]
-    types = {
+    categories: List[EVehicleType] = [EVehicleType.CAR, EVehicleType.BIKE, EVehicleType.MOTORCYCLE, EVehicleType.TRUCK]
+    types: Dict[EVehicleType, str] = {
         EVehicleType.CAR: [
             "audi.a2",
             "audi.etron",
