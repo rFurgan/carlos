@@ -25,14 +25,16 @@ class Api:
         port (int): Port to the host where the Carla world is running
         relevance_radius (int): Radius of distance that filters out actors that are out of range from the hero
         max_entry_count (int): Amount of entries to be stored for CSV file to be created
+        hero_id (int, optional): Id of the actor to be assigned as hero
     """
-    def __init__(self, host: str, port: int, relevance_radius: float, max_entry_count: int) -> None:
+    def __init__(self, host: str, port: int, relevance_radius: float, max_entry_count: int, hero_id: int = -1) -> None:
         self._actors: Dict[int, Actor] = {}
         self._road_users: List[carla.Actor] = []
         self._subscribers: List[Callable] = []
         self._stop: bool = False
         self._thread: Union[Thread, None] = None
         self._hero: Union[Hero, None] = None
+        self._hero_id: int = hero_id
         self._relevance_radius: float = relevance_radius
         self._max_entry_count: int = max_entry_count
         self._header_written: bool = False
@@ -48,7 +50,9 @@ class Api:
                 EActorType.VEHICLE.value in actor.type_id
                 or EActorType.PEDESTRIAN.value in actor.type_id
             ):
-                if self._hero == None and mo.vector_length(actor.get_velocity()) > 0:
+                if self._hero_id != -1 and actor.id == self._hero_id:
+                    self._hero = Hero(actor.id, self._actors, self._subscribers, self._relevance_radius)
+                elif self._hero_id == -1 and self._hero == None and mo.vector_length(actor.get_velocity()) > 0:
                     self._hero = Hero(actor.id, self._actors, self._subscribers, self._relevance_radius)
                 self._road_users.append(actor)
                 self._actors[actor.id] = Actor(
