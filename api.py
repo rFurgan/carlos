@@ -83,10 +83,6 @@ class Api:
     def save_csv(self, path: str, filename: str) -> None:
         """Method to save collected data into a .csv file on the given path with the given filename
 
-        Note:
-            If the path doesn't work, try adding r before the string. E.g. r"C:\users\someUser\Desktop"
-            The filename should include .csv at the end
-
         Args:
             path (string): Path where the file should be saved to
             filename (string): Name of the file the data should be saved to
