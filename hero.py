@@ -1,6 +1,6 @@
 from recent_data import RecentData
 from scipy import interpolate
-from common import Coordinate
+from datatypes import Coordinate
 from typing import Dict, Callable, List, Union, Tuple
 from actor import Actor
 import math_operations as mo

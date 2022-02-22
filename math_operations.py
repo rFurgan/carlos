@@ -1,4 +1,5 @@
-from common import Vector, Y_AXIS, Coordinate
+from common import Y_AXIS
+from datatypes import Coordinate, Vector
 from math import atan2, degrees, sqrt
 from typing import Union
 

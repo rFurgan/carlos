@@ -1,6 +1,6 @@
-from common import Recent, MAX_STORE_SIZE
+from common import MAX_STORE_SIZE
 from typing import Union, Dict, Tuple
-from common.datatypes import Coordinate, Vector
+from datatypes import Coordinate, Vector, Recent
 import math_operations as mo
 
 class RecentData:
