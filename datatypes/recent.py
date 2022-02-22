@@ -1,40 +1,51 @@
+from datatypes import Coordinate
+from typing import Union
+
 class Recent:
     """Class to represent previous and current data
 
     Args:
-        previous (any): Previous data
-        previous (any): Most recent data
+        previous (float | Coordinate | None]): Previous data
+        current (float | Coordinate | None]): Most recent data
     """
-    def __init__(self, previous: any, current: any) -> None:
-        self._previous: any = previous
-        self._current: any = current
+    def __init__(self, previous: Union[float, Coordinate, None], current: Union[float, Coordinate, None]) -> None:
+        self._previous: Union[float, Coordinate, None] = previous
+        self._current: Union[float, Coordinate, None] = current
 
     @property
-    def previous(self) -> any:
+    def previous(self) -> Union[float, Coordinate, None]:
         """
         Returns:
-            any: Previously stored data"""
+            float: Previously stored float data
+            Coordinate: Previously stored Coordinate
+            None: No data stored previously
+        """
         return self._previous
 
     @property
-    def current(self) -> any:
+    def current(self) -> Union[float, Coordinate, None]:
         """
         Returns:
-            any: Most recently stored data"""
+            float: Most recently stored float data
+            Coordinate: Most recently stored Coordinate
+            None: No data stored recently
+        """
         return self._current
 
     @previous.setter
-    def previous(self, previous: any) -> None:
+    def previous(self, previous: Union[float, Coordinate, None]) -> None:
         """
         Args:
-            previous (any): Value to set previous"""
+            previous (float | Coordinate | None]): Value to set previous
+        """
         self._previous = previous
 
     @current.setter
-    def current(self, current: any) -> None:
+    def current(self, current: Union[float, Coordinate, None]) -> None:
         """
         Args:
-            current (any): Value to set current"""
+            current (float | Coordinate | None]): Value to set current
+        """
         self._current = current
 
     def has_none(self) -> bool:
