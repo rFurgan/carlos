@@ -114,7 +114,7 @@ class Api:
                 self._subscribers.pop(index)
                 break
 
-    def _header(self) -> None:
+    def _header(self) -> List[str]:
         """Creates a header line for the created CSV file
 
         Returns:

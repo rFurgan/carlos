@@ -1,6 +1,6 @@
 from typing import Dict
 from common import Vector
-from .enums import EActorType, EVehicleType
+from .vehicle_type import EActorType, EVehicleType
 
 Y_AXIS: Vector = Vector(0, 1, 0)
 
