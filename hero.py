@@ -47,8 +47,8 @@ class Hero:
             try:
                 for subscriber in self._subscribers:
                     subscriber(json.dumps([id, velocity, orientation, angular_speed, distance_to_hero, angle_to_hero]))
-            except Exception as error:
-                logging.error(f"An error occurred when notifying a subscriber: {error.message}")
+            except Exception as err:
+                logging.error(f"An error occurred when notifying a subscriber: {err}")
 
     def _hero_dependent_data(self, id: int, timestamp: float) -> Union[Tuple[None, None], Tuple[float, None], Tuple[float, float]]:
         """Method that calculates and returns hero dependent data (distance to hero and angle to hero)

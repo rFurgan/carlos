@@ -9,7 +9,8 @@ import math_operations as mo
 from hero import Hero
 from actor import Actor
 from typing import Dict, List, Callable, Union
-from common import EActorType, Coordinate, VehicleTypes, ROAD_USER_CODE
+from common import EActorType, VehicleTypes, ROAD_USER_CODE
+from datatypes import Coordinate
 from datetime import datetime
 from threading import Thread
 
@@ -43,8 +44,8 @@ class Api:
             client: carla.Client = carla.Client(host, port)
             client.set_timeout(2.0)
             world: carla.World = client.get_world()
-        except RuntimeError as error:
-            logging.error(f"Something went wrong connecting: {error.message}")
+        except RuntimeError as err:
+            logging.error(f"Something went wrong connecting: {err}")
             sys.exit(1)
         for actor in world.get_actors():
             if (

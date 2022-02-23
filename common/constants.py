@@ -1,6 +1,7 @@
 from typing import Dict
-from common import Vector
-from .vehicle_type import EActorType, EVehicleType
+from datatypes import Vector
+from .vehicle_type import EVehicleType
+from .actor_type import EActorType
 
 Y_AXIS: Vector = Vector(0, 1, 0)
 

@@ -51,11 +51,11 @@ class Actor:
             self._angle_to_hero.pop(0)
         self._angle_to_hero.append(angle_to_hero if angle_to_hero != None else 0)
 
-    def get_data(self) -> List[int, float]:
+    def get_data(self) -> List[Union[int, float]]:
         """Returns all saved data in a single big array with id and type as first entries
 
         Returns:
-            List[any]: Array of all stored data with id and type as first entries
+            List[int | float]: Array of all stored data with id and type as first entries
         """
         return (
             self._data

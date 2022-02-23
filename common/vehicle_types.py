@@ -1,4 +1,4 @@
-from common import EVehicleType
+from .vehicle_type import EVehicleType
 from typing import List, Dict
 
 

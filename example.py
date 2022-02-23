@@ -19,9 +19,9 @@ def change_world(map: str, host: str, port: int) -> None:
         client: carla.Client = carla.Client(host, port)
         client.set_timeout(2.0)
         client.load_world(map)
-    except RuntimeError as error:
+    except RuntimeError as err:
         logging.error(
-            f"Failed to connect to CARLA world {host}:{port} due to error: {error.message}"
+            f"Failed to connect to CARLA world {host}:{port} due to error: {err}"
         )
 
 
