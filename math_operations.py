@@ -3,8 +3,9 @@ from datatypes import Coordinate, Vector
 from math import atan2, degrees, sqrt
 from typing import Union
 
+
 def vector(point: Coordinate, foot: Coordinate) -> Vector:
-    """Converts and returns a vector from the two given points 
+    """Converts and returns a vector from the two given points
 
     Args:
     point (Coordinate): Point the vector points to
@@ -21,7 +22,7 @@ def vector(point: Coordinate, foot: Coordinate) -> Vector:
 
 
 def dot_product(vector_a: Vector, vector_b: Vector) -> float:
-    """Calculates and returns the dot product of two given vectors 
+    """Calculates and returns the dot product of two given vectors
 
     Args:
         vector_a (Vector): First vector to calculate dot product
@@ -34,7 +35,7 @@ def dot_product(vector_a: Vector, vector_b: Vector) -> float:
 
 
 def determinant(vector_a: Vector, vector_b: Vector) -> float:
-    """Calculates and returns the determinant of two given vectors 
+    """Calculates and returns the determinant of two given vectors
 
     Args:
         vector_a (Vector): First vector to calculate determinant
@@ -47,7 +48,7 @@ def determinant(vector_a: Vector, vector_b: Vector) -> float:
 
 
 def vector_length(vector_v: Vector) -> float:
-    """Calculates and returns the of the given vectors 
+    """Calculates and returns the of the given vectors
 
     Args:
         vector_v (Vector): Vector to calculate the length of
@@ -108,7 +109,9 @@ def angle_between_vectors(vector_a: Vector, vector_b: Vector) -> float:
     return angle if angle >= 0 else 360 + angle
 
 
-def angular_speed(angle_a: float, angle_b: float, t_before: float, t_after: float) -> float:
+def angular_speed(
+    angle_a: float, angle_b: float, t_before: float, t_after: float
+) -> float:
     """Calculates and returns the angular speed between the given angles and the corresponding timestamps
 
     Args:

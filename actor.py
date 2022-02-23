@@ -1,13 +1,15 @@
 from typing import List, Union, Dict
 
+
 class Actor:
     """Class to store a certain amount of data (velocity, orientation, angular speed, distance to hero and angle to hero)
-    
+
     Args:
         id (int): Id that represents the actor in the Carla world
         type (int): Number that represents the type of traffic user in the Carla world
         max_entry_count: (int): Maximum amount of entries to be stored
     """
+
     def __init__(self, id: int, type: int, max_entry_count: int) -> None:
         self._data: Dict[int, int] = [id, type]
         self._max_entry_count: int = max_entry_count
@@ -18,7 +20,12 @@ class Actor:
         self._angle_to_hero: List[float] = []
 
     def add_data(
-        self, velocity: Union[float, None], orientation: Union[float, None], angular_speed: Union[float, None], distance_to_hero: Union[float, None], angle_to_hero: Union[float, None]
+        self,
+        velocity: Union[float, None],
+        orientation: Union[float, None],
+        angular_speed: Union[float, None],
+        distance_to_hero: Union[float, None],
+        angle_to_hero: Union[float, None],
     ) -> None:
         """Add new entry to saved data
 

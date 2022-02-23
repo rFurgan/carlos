@@ -29,7 +29,15 @@ class Api:
         max_entry_count (int): Amount of entries to be stored for CSV file to be created
         hero_id (int, optional): Id of the actor to be assigned as hero
     """
-    def __init__(self, host: str, port: int, relevance_radius: float, max_entry_count: int, hero_id: int = -1) -> None:
+
+    def __init__(
+        self,
+        host: str,
+        port: int,
+        relevance_radius: float,
+        max_entry_count: int,
+        hero_id: int = -1,
+    ) -> None:
         self._actors: Dict[int, Actor] = {}
         self._road_users: List[carla.Actor] = []
         self._subscribers: List[Callable] = []
@@ -53,9 +61,23 @@ class Api:
                 or EActorType.PEDESTRIAN.value in actor.type_id
             ):
                 if self._hero_id != -1 and actor.id == self._hero_id:
-                    self._hero = Hero(actor.id, self._actors, self._subscribers, self._relevance_radius)
-                elif self._hero_id == -1 and self._hero == None and mo.vector_length(actor.get_velocity()) > 0:
-                    self._hero = Hero(actor.id, self._actors, self._subscribers, self._relevance_radius)
+                    self._hero = Hero(
+                        actor.id,
+                        self._actors,
+                        self._subscribers,
+                        self._relevance_radius,
+                    )
+                elif (
+                    self._hero_id == -1
+                    and self._hero == None
+                    and mo.vector_length(actor.get_velocity()) > 0
+                ):
+                    self._hero = Hero(
+                        actor.id,
+                        self._actors,
+                        self._subscribers,
+                        self._relevance_radius,
+                    )
                 self._road_users.append(actor)
                 self._actors[actor.id] = Actor(
                     actor.id, self._classify_type(actor.type_id), self._max_entry_count
@@ -130,13 +152,13 @@ class Api:
         return header
 
     def _data_header(self, data_type: str) -> List[str]:
-        """Creates multiple headers for each column 
+        """Creates multiple headers for each column
 
         Args:
             data_type (str): Name of the column
 
         Returns:
-            List[str]: Array with index appended to the name 
+            List[str]: Array with index appended to the name
         """
         header: List[str] = []
         for count in range(self._max_entry_count):
@@ -151,14 +173,16 @@ class Api:
             error_range (float): Range from which a random error is generated that falsifies the positions
         """
 
-        distortion = lambda _ : round(random.uniform(-_, _), 3)
+        distortion = lambda _: round(random.uniform(-_, _), 3)
 
         while not self._stop:
             current_time: float = round(time.time(), 3)
             time_now: datetime = datetime.now()
             for actor in self._road_users:
                 location: carla.Location = actor.get_transform().location
-                timestamp: float = time_now.second + round(time_now.microsecond / 1000000, 3)
+                timestamp: float = time_now.second + round(
+                    time_now.microsecond / 1000000, 3
+                )
                 self._hero.on_position_data(
                     actor.id,
                     timestamp,

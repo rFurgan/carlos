@@ -3,12 +3,14 @@ from typing import Union, Dict, Tuple
 from datatypes import Coordinate, Vector, Recent
 import math_operations as mo
 
+
 class RecentData:
     """Class to store the most recent data and provide velocity, orientation and angular velocity
 
     Args:
         expiration_time (float): Time in seconds when the stored current timestamp and position is expired
     """
+
     def __init__(self, expiration_time: float) -> None:
         self._expiration_time: float = expiration_time
         self._recent_timestamp: Recent = Recent(None, None)
@@ -21,15 +23,17 @@ class RecentData:
     @property
     def stored(self) -> Dict[float, Coordinate]:
         """Returns the dictionary with the positions on the corresponding timestamps
-        
+
         Returns:
-            Dict[float, Coordinate]: Dictionary with the most recent timestamps and the corresponding positions 
+            Dict[float, Coordinate]: Dictionary with the most recent timestamps and the corresponding positions
         """
         return self._stored
 
-    def update(self, timestamp: float, position: Coordinate) -> Union[Tuple[float, float, float], Tuple[None, None, None]]:
+    def update(
+        self, timestamp: float, position: Coordinate
+    ) -> Union[Tuple[float, float, float], Tuple[None, None, None]]:
         """Updates the previous and current timestamp and position returning the calculated data
-        
+
         Args:
             timestamp (float): Most recent timestamp to save
             position (Coordinate): Most recent position to save
@@ -66,7 +70,7 @@ class RecentData:
 
     def _get_velocity(self, vec: Vector) -> float:
         """Calculates and returns the current velocity
-        
+
         Args:
             vec (Vector): Vector of most recent covered distance
 
@@ -80,7 +84,7 @@ class RecentData:
 
     def _get_orientation(self, vec: Vector) -> Union[float, None]:
         """Calculates and returns the current orientation
-        
+
         Args:
             vec (Vector): Vector of most recent covered distance
 
@@ -101,7 +105,7 @@ class RecentData:
 
     def _get_angular_velocity(self) -> float:
         """Calculates and returns the current angular velocity
-        
+
         Returns:
             float: Current angular velocity
         """
@@ -116,7 +120,7 @@ class RecentData:
 
     def _store(self, timestamp: float, position: Coordinate) -> None:
         """Stores the most recent position and corresponding timestamp
-        
+
         Args:
             timestamp (float): Timestamp of most recent detected position
             position (Coordinate): Most recent detected position

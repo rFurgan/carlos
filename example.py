@@ -7,6 +7,7 @@ LOCAL_PORT: int = 2000
 RELEVANCE_RADIUS: int = 50000
 MAX_ENTRY_COUNT: int = 10
 
+
 def change_world(map: str, host: str, port: int) -> None:
     """Method to change Carla world to the provided map
 

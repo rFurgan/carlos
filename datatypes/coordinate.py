@@ -6,6 +6,7 @@ class Coordinate:
         y (float): y component of coordinate
         z (float): z component of coordinate
     """
+
     def __init__(self, x: float, y: float, z: float):
         self._x: float = x
         self._y: float = y

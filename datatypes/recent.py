@@ -1,6 +1,7 @@
 from datatypes import Coordinate
 from typing import Union
 
+
 class Recent:
     """Class to represent previous and current data
 
@@ -8,7 +9,12 @@ class Recent:
         previous (float | Coordinate | None]): Previous data
         current (float | Coordinate | None]): Most recent data
     """
-    def __init__(self, previous: Union[float, Coordinate, None], current: Union[float, Coordinate, None]) -> None:
+
+    def __init__(
+        self,
+        previous: Union[float, Coordinate, None],
+        current: Union[float, Coordinate, None],
+    ) -> None:
         self._previous: Union[float, Coordinate, None] = previous
         self._current: Union[float, Coordinate, None] = current
 
@@ -50,7 +56,7 @@ class Recent:
 
     def has_none(self) -> bool:
         """Check if either previous or current is set to None
-        
+
         Returns:
             bool: True if one of the attributes set to None, False otherwise
         """

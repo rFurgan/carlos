@@ -10,13 +10,20 @@ import logging
 
 class Hero:
     """Class that represents the hero ("the vehicle on which the software is running") and does all the calculations with the position data received
-    
+
     Args:
         hero_id (int): Id of the hero in the connected Carla world
         actors (Dict[int, Actor]): Dictionary with all actors in the connected Carla world with the id as the key
-        subscribers (List[Callable]): List 
+        subscribers (List[Callable]): List
     """
-    def __init__(self, hero_id: int, actors: Dict[int, Actor], subscribers: List[Callable], relevance_radius: float) -> None:
+
+    def __init__(
+        self,
+        hero_id: int,
+        actors: Dict[int, Actor],
+        subscribers: List[Callable],
+        relevance_radius: float,
+    ) -> None:
         self._hero_id: int = hero_id
         self._actors: Dict[int, Actor] = actors
         self._subscribers: List[Callable] = subscribers
@@ -40,17 +47,34 @@ class Hero:
             distance_to_hero, angle_to_hero = self._hero_dependent_data(id, timestamp)
         else:
             distance_to_hero, angle_to_hero = 0, 0
-        if distance_to_hero <= self._relevance_radius and id in self._actors:
+        if (
+            distance_to_hero != None
+            and distance_to_hero <= self._relevance_radius
+            and id in self._actors
+        ):
             self._actors[id].add_data(
                 velocity, orientation, angular_speed, distance_to_hero, angle_to_hero
             )
             try:
                 for subscriber in self._subscribers:
-                    subscriber(json.dumps([id, velocity, orientation, angular_speed, distance_to_hero, angle_to_hero]))
+                    subscriber(
+                        json.dumps(
+                            [
+                                id,
+                                velocity,
+                                orientation,
+                                angular_speed,
+                                distance_to_hero,
+                                angle_to_hero,
+                            ]
+                        )
+                    )
             except Exception as err:
                 logging.error(f"An error occurred when notifying a subscriber: {err}")
 
-    def _hero_dependent_data(self, id: int, timestamp: float) -> Union[Tuple[None, None], Tuple[float, None], Tuple[float, float]]:
+    def _hero_dependent_data(
+        self, id: int, timestamp: float
+    ) -> Union[Tuple[None, None], Tuple[float, None], Tuple[float, float]]:
         """Method that calculates and returns hero dependent data (distance to hero and angle to hero)
 
         Args:
@@ -87,9 +111,9 @@ class Hero:
 
         Returns:
             None: Insufficient data
-            Coordinate: Predicted position at the provided timestamp 
+            Coordinate: Predicted position at the provided timestamp
         """
-        if not (id in self._recent_data):
+        if id not in self._recent_data:
             return None
         stored_data: Dict[float, Coordinate] = self._recent_data[id].stored
         timestamps: List[float] = sorted(stored_data, reverse=True)
@@ -108,13 +132,23 @@ class Hero:
             if timestamp < timestamps[0] or timestamp > timestamps[-1]
             else "interpolate"
         )
-        polate_x: interpolate.interp1d = interpolate.interp1d(timestamps, x, fill_value=polation)
-        polate_y: interpolate.interp1d = interpolate.interp1d(timestamps, y, fill_value=polation)
-        polate_z: interpolate.interp1d = interpolate.interp1d(timestamps, z, fill_value=polation)
+        polate_x: interpolate.interp1d = interpolate.interp1d(
+            timestamps, x, fill_value=polation
+        )
+        polate_y: interpolate.interp1d = interpolate.interp1d(
+            timestamps, y, fill_value=polation
+        )
+        polate_z: interpolate.interp1d = interpolate.interp1d(
+            timestamps, z, fill_value=polation
+        )
 
         return Coordinate(polate_x(timestamp), polate_y(timestamp), polate_z(timestamp))
 
-    def _predict_positions(self, id: float, timestamp_before: float, timestamp_now: float) -> Union[Tuple[None, None], Tuple[Coordinate, None], Tuple[Coordinate, Coordinate]]:
+    def _predict_positions(
+        self, id: float, timestamp_before: float, timestamp_now: float
+    ) -> Union[
+        Tuple[None, None], Tuple[Coordinate, None], Tuple[Coordinate, Coordinate]
+    ]:
         """Method to predict positions at a given timestamps via inter-/extrapolation
 
         Args:
@@ -159,9 +193,15 @@ class Hero:
             if timestamp_now < timestamps[0] or timestamp_now > timestamps[-1]
             else "interpolate"
         )
-        polate_x_now: interpolate.interp1d = interpolate.interp1d(timestamps, x, fill_value=polation_now)
-        polate_y_now: interpolate.interp1d = interpolate.interp1d(timestamps, y, fill_value=polation_now)
-        polate_z_now: interpolate.interp1d = interpolate.interp1d(timestamps, z, fill_value=polation_now)
+        polate_x_now: interpolate.interp1d = interpolate.interp1d(
+            timestamps, x, fill_value=polation_now
+        )
+        polate_y_now: interpolate.interp1d = interpolate.interp1d(
+            timestamps, y, fill_value=polation_now
+        )
+        polate_z_now: interpolate.interp1d = interpolate.interp1d(
+            timestamps, z, fill_value=polation_now
+        )
 
         position_x_now: float = polate_x_now(timestamp_now)
         position_y_now: float = polate_y_now(timestamp_now)
@@ -194,7 +234,9 @@ class Hero:
             ),
         )
 
-    def _get_distance_to_hero(self, position_hero: Coordinate, position_other: Coordinate) -> float:
+    def _get_distance_to_hero(
+        self, position_hero: Coordinate, position_other: Coordinate
+    ) -> float:
         """Calculates and returns the distance between the hero and the other provided actor
 
         Args:
@@ -213,7 +255,7 @@ class Hero:
         position_hero_now: Coordinate,
         position_other: Coordinate,
     ) -> float:
-        """Calculates and returns the angle in which the other actor is in relation to the orientation of the hero 
+        """Calculates and returns the angle in which the other actor is in relation to the orientation of the hero
 
         Args:
             position_hero_before (Coordinate): Position of the hero before (to determine the orientation)

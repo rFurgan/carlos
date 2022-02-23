@@ -6,6 +6,7 @@ class Vector:
         y (float): y component of vector
         z (float): z component of vector
     """
+
     def __init__(self, x: float, y: float, z: float) -> None:
         self._x: float = x
         self._y: float = y
