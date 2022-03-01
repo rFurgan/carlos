@@ -4,13 +4,13 @@ import time
 import csv
 import carla
 import pathlib
-import random
 import math_operations as mo
 from hero import Hero
 from actor import Actor
-from typing import Dict, List, Callable, Union
+from typing import Dict, List, Union
 from common import EActorType, VehicleTypes, ROAD_USER_CODE
-from datatypes import Coordinate
+
+from datatypes import Subscription
 from datetime import datetime
 from threading import Thread
 
@@ -29,10 +29,18 @@ class Api:
         max_entry_count (int): Amount of entries to be stored for CSV file to be created
         hero_id (int, optional): Id of the actor to be assigned as hero
     """
-    def __init__(self, host: str, port: int, relevance_radius: float, max_entry_count: int, hero_id: int = -1) -> None:
+
+    def __init__(
+        self,
+        host: str,
+        port: int,
+        relevance_radius: float,
+        max_entry_count: int,
+        hero_id: int = -1,
+    ) -> None:
         self._actors: Dict[int, Actor] = {}
         self._road_users: List[carla.Actor] = []
-        self._subscribers: List[Callable] = []
+        self._subscribers = []
         self._stop: bool = False
         self._thread: Union[Thread, None] = None
         self._hero: Union[Hero, None] = None
@@ -42,7 +50,7 @@ class Api:
         self._header_written: bool = False
         try:
             client: carla.Client = carla.Client(host, port)
-            client.set_timeout(2.0)
+            client.set_timeout(5.0)
             world: carla.World = client.get_world()
         except RuntimeError as err:
             logging.error(f"Something went wrong connecting: {err}")
@@ -53,9 +61,23 @@ class Api:
                 or EActorType.PEDESTRIAN.value in actor.type_id
             ):
                 if self._hero_id != -1 and actor.id == self._hero_id:
-                    self._hero = Hero(actor.id, self._actors, self._subscribers, self._relevance_radius)
-                elif self._hero_id == -1 and self._hero == None and mo.vector_length(actor.get_velocity()) > 0:
-                    self._hero = Hero(actor.id, self._actors, self._subscribers, self._relevance_radius)
+                    self._hero = Hero(
+                        actor.id,
+                        self._actors,
+                        self._subscribers,
+                        self._relevance_radius,
+                    )
+                elif (
+                    self._hero_id == -1
+                    and self._hero == None
+                    and mo.vector_length(actor.get_velocity()) > 0
+                ):
+                    self._hero = Hero(
+                        actor.id,
+                        self._actors,
+                        self._subscribers,
+                        self._relevance_radius,
+                    )
                 self._road_users.append(actor)
                 self._actors[actor.id] = Actor(
                     actor.id, self._classify_type(actor.type_id), self._max_entry_count
@@ -96,22 +118,22 @@ class Api:
             for actor_id in self._actors:
                 writer.writerow(self._actors[actor_id].get_data())
 
-    def subscribe(self, callback: Callable) -> None:
+    def subscribe(self, subscription: Subscription) -> None:
         """Method to add callback function to which the calculated data will be forwarded to in runtime
 
         Args:
-            callback (function): Callback function with one argument holding the data in JSON format
+            subscription (Subscription): Callback function with one argument holding the data in JSON format
         """
-        self._subscribers.append(callback)
+        self._subscribers.append(subscription)
 
-    def unsubscribe(self, callback: Callable) -> None:
+    def unsubscribe(self, subscription: Subscription) -> None:
         """Method to remove callback function to which the calculated data is forwarded to in runtime
 
         Args:
-            callback (function): Callback function that should be removed
+            subscription (Subscription): Callback function that should be removed
         """
         for index in range(len(self._subscribers)):
-            if self._subscribers[index] == callback:
+            if self._subscribers[index] == subscription:
                 self._subscribers.pop(index)
                 break
 
@@ -125,18 +147,19 @@ class Api:
         header += self._data_header("velocity")
         header += self._data_header("orientation")
         header += self._data_header("angular_speed")
+        header += self._data_header("accelaration")
         header += self._data_header("distance_to_hero")
         header += self._data_header("angle_to_hero")
         return header
 
     def _data_header(self, data_type: str) -> List[str]:
-        """Creates multiple headers for each column 
+        """Creates multiple headers for each column
 
         Args:
             data_type (str): Name of the column
 
         Returns:
-            List[str]: Array with index appended to the name 
+            List[str]: Array with index appended to the name
         """
         header: List[str] = []
         for count in range(self._max_entry_count):
@@ -150,23 +173,18 @@ class Api:
             tick (float): Time in seconds how much time should pass until the next poll starts
             error_range (float): Range from which a random error is generated that falsifies the positions
         """
-
-        distortion = lambda _ : round(random.uniform(-_, _), 3)
-
         while not self._stop:
             current_time: float = round(time.time(), 3)
             time_now: datetime = datetime.now()
             for actor in self._road_users:
                 location: carla.Location = actor.get_transform().location
-                timestamp: float = time_now.second + round(time_now.microsecond / 1000000, 3)
+                timestamp: float = time_now.second + round(
+                    time_now.microsecond / 1000000, 3
+                )
                 self._hero.on_position_data(
                     actor.id,
                     timestamp,
-                    Coordinate(
-                        x=location.x + distortion(error_range),
-                        y=location.y + distortion(error_range),
-                        z=location.z + distortion(error_range),
-                    ),
+                    mo.distorted_coordinate(location, abs(float(error_range))),
                 )
             rest_time: float = round(time.time(), 3) - current_time
             rest_sleep: float = tick - rest_time

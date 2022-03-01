@@ -10,7 +10,13 @@ class VehicleTypes:
         categories (List[EVehicleType]): Array of all vehicle types
         types (Dict[EVehicleType, str]): Dictionary with vehicle types and all vehicle names of the corresponding type
     """
-    categories: List[EVehicleType] = [EVehicleType.CAR, EVehicleType.BIKE, EVehicleType.MOTORCYCLE, EVehicleType.TRUCK]
+
+    categories: List[EVehicleType] = [
+        EVehicleType.CAR,
+        EVehicleType.BIKE,
+        EVehicleType.MOTORCYCLE,
+        EVehicleType.TRUCK,
+    ]
     types: Dict[EVehicleType, str] = {
         EVehicleType.CAR: [
             "audi.a2",
