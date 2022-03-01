@@ -6,6 +6,7 @@ from carla import Location
 import random
 
 
+
 def vector(point: Coordinate, foot: Coordinate) -> Vector:
     """Converts and returns a vector from the two given points
 
