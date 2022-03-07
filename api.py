@@ -5,11 +5,11 @@ import csv
 import carla
 import pathlib
 import math_operations as mo
+
 from hero import Hero
 from actor import Actor
 from typing import Dict, List, Union
 from common import EActorType, VehicleTypes, ROAD_USER_CODE
-
 from datatypes import Subscription
 from datetime import datetime
 from threading import Thread
@@ -40,7 +40,7 @@ class Api:
     ) -> None:
         self._actors: Dict[int, Actor] = {}
         self._road_users: List[carla.Actor] = []
-        self._subscribers = []
+        self._subscribers: List[Subscription] = []
         self._stop: bool = False
         self._thread: Union[Thread, None] = None
         self._hero: Union[Hero, None] = None

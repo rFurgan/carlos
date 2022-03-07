@@ -14,17 +14,21 @@ class RecentData:
     def __init__(self, expiration_time: float) -> None:
         self._expiration_time: float = expiration_time
         self._recent_timestamp: Recent[Union[float, None]] = Recent[Union[float, None]](
-            None, None)
-        self._recent_position: Recent[Union[Coordinate, None]] = Recent[Union[Coordinate, None]](
-            None, None)
-        self._recent_orientation: Recent[Union[float, None]] = Recent[Union[float, None]](
-            None, None)
+            None, None
+        )
+        self._recent_position: Recent[Union[Coordinate, None]] = Recent[
+            Union[Coordinate, None]
+        ](None, None)
+        self._recent_orientation: Recent[Union[float, None]] = Recent[
+            Union[float, None]
+        ](None, None)
         self._recent_velocity: Recent[Union[float, None]] = Recent[Union[float, None]](
-            None, None)
+            None, None
+        )
         self._orientation: Union[float, None] = None
         self._stored: Dict[float, Coordinate] = {}
 
-    @ property
+    @property
     def stored(self) -> Dict[float, Coordinate]:
         """Returns the dictionary with the positions on the corresponding timestamps
 
@@ -98,7 +102,9 @@ class RecentData:
         if self._recent_velocity.has_none() or self._recent_timestamp.has_none():
             return 0
         delta_v: float = self._recent_velocity.current - self._recent_velocity.previous
-        delta_t: float = self._recent_timestamp.current - self._recent_timestamp.previous
+        delta_t: float = (
+            self._recent_timestamp.current - self._recent_timestamp.previous
+        )
         if delta_t == 0:
             return 0
         return delta_v / delta_t
@@ -116,7 +122,11 @@ class RecentData:
         orientation: Union[float, None] = mo.angle_to_y_axis(vec)
         self._recent_orientation.previous = self._recent_orientation.current
         self._recent_orientation.current = orientation
-        if orientation != None and self._recent_velocity.current != None and self._recent_velocity.current > 0:
+        if (
+            orientation != None
+            and self._recent_velocity.current != None
+            and self._recent_velocity.current > 0
+        ):
             self._orientation = orientation
         return self._orientation
 
