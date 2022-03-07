@@ -4,8 +4,8 @@ import time
 import csv
 import carla
 import pathlib
-import math_operations as mo
 
+from math_operations import MathOperations as mo
 from hero import Hero
 from actor import Actor
 from typing import Dict, List, Union
