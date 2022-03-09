@@ -9,7 +9,7 @@ from math_operations import MathOperations as mo
 from hero import Hero
 from actor import Actor
 from typing import Dict, List, Union
-from common import EActorType, VehicleTypes, ROAD_USER_CODE
+from common import *
 from datatypes import Subscription
 from datetime import datetime
 from threading import Thread
@@ -203,5 +203,5 @@ class Api:
         for category in VehicleTypes.categories:
             for type in VehicleTypes.types[category]:
                 if type in actor_type:
-                    return ROAD_USER_CODE[category]
-        return ROAD_USER_CODE[EActorType.PEDESTRIAN]
+                    return Constants.ROAD_USER_CODE[category]
+        return Constants.ROAD_USER_CODE[EActorType.PEDESTRIAN]

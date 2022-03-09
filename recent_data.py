@@ -1,4 +1,4 @@
-from common import MAX_STORE_SIZE
+from common import Constants as c
 from typing import Union, Dict, Tuple
 from datatypes import Coordinate, Vector, Recent
 from math_operations import MathOperations as mo
@@ -152,7 +152,7 @@ class RecentData:
             timestamp (float): Timestamp of most recent detected position
             position (Coordinate): Most recent detected position
         """
-        if len(self._stored) >= MAX_STORE_SIZE:
+        if len(self._stored) >= c.MAX_STORE_SIZE:
             first = list(self._stored.keys())[0]
             del self._stored[first]
         self._stored[timestamp] = position

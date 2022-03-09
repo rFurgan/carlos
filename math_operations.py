@@ -1,4 +1,4 @@
-from common import Y_AXIS
+from common import Constants as c
 from datatypes import Coordinate, Vector
 from math import atan2, degrees, sqrt
 from typing import Union
@@ -91,8 +91,8 @@ class MathOperations:
         """
         if vector_v.x == 0 and vector_v.y == 0:
             return None
-        dot: float = MathOperations.dot_product(Y_AXIS, vector_v)
-        det: float = MathOperations.determinant(Y_AXIS, vector_v)
+        dot: float = MathOperations.dot_product(c.Y_AXIS, vector_v)
+        det: float = MathOperations.determinant(c.Y_AXIS, vector_v)
         angle: float = round(degrees(atan2(det, dot)), 2)
         return angle if angle >= 0 else 360 + angle
 
