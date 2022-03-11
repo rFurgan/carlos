@@ -108,8 +108,8 @@ class MathOperations:
             float: Angle between the given vectors (0-360 degrees)
         """
         dot: float = MathOperations.dot_product(vector_a, vector_b)
-        det: float = MathOperations.cross_product(vector_a, vector_b)
-        angle: float = round(degrees(atan2(det, dot)), 2)
+        cp: float = MathOperations.cross_product(vector_a, vector_b)
+        angle: float = round(degrees(atan2(cp, dot)), 2)
         return angle if angle >= 0 else 360 + angle
 
     @staticmethod
