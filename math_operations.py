@@ -38,15 +38,15 @@ class MathOperations:
         return vector_a.x * vector_b.x + vector_a.y * vector_b.y
 
     @staticmethod
-    def determinant(vector_a: Vector, vector_b: Vector) -> float:
-        """Calculates and returns the determinant of two given vectors
+    def cross_product(vector_a: Vector, vector_b: Vector) -> float:
+        """Calculates and returns the cross_product of two given vectors
 
         Args:
-            vector_a (Vector): First vector to calculate determinant
-            vector_b (Vector): Second vector to calculate determinant
+            vector_a (Vector): First vector to calculate cross_product
+            vector_b (Vector): Second vector to calculate cross_product
 
         Returns:
-            float: Determinant of vector_a and vector_b
+            float: Cross product of vector_a and vector_b
         """
         return vector_a.x * vector_b.y - vector_a.y * vector_b.x
 
@@ -92,7 +92,7 @@ class MathOperations:
         if vector_v.x == 0 and vector_v.y == 0:
             return None
         dot: float = MathOperations.dot_product(c.Y_AXIS, vector_v)
-        det: float = MathOperations.determinant(c.Y_AXIS, vector_v)
+        det: float = MathOperations.cross_product(c.Y_AXIS, vector_v)
         angle: float = round(degrees(atan2(det, dot)), 2)
         return angle if angle >= 0 else 360 + angle
 
@@ -108,7 +108,7 @@ class MathOperations:
             float: Angle between the given vectors (0-360 degrees)
         """
         dot: float = MathOperations.dot_product(vector_a, vector_b)
-        det: float = MathOperations.determinant(vector_a, vector_b)
+        det: float = MathOperations.cross_product(vector_a, vector_b)
         angle: float = round(degrees(atan2(det, dot)), 2)
         return angle if angle >= 0 else 360 + angle
 
