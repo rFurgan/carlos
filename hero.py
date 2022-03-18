@@ -273,6 +273,5 @@ class Hero:
             float: Angle in which the other actor is in relation to the orientation of the hero
         """
         vector_hero = mo.vector(position_hero_now, position_hero_before)
-        vector_hero = Vector(-vector_hero.x, -vector_hero.y, -vector_hero.z)
         vector_hero_other = mo.vector(position_other, position_hero_before)
         return mo.angle_between_vectors(vector_hero, vector_hero_other)
