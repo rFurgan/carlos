@@ -166,7 +166,7 @@ class Api:
             header.append(f"{data_type}_{count}")
         return header
 
-    def _poll_data(self, tick: float, error_range: float) -> float:
+    def _poll_data(self, tick: float, error_range: float) -> None:
         """Method to run a loop to poll position of each found traffic user in the connected Carla world and calculate their data in a specified time interval
 
         Args:

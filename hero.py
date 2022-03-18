@@ -1,6 +1,6 @@
 from recent_data import RecentData
 from scipy import interpolate
-from datatypes import Coordinate, Subscription
+from datatypes import Coordinate, Subscription, Vector
 from typing import Dict, List, Union, Tuple
 from actor import Actor
 from math_operations import MathOperations as mo
@@ -273,5 +273,6 @@ class Hero:
             float: Angle in which the other actor is in relation to the orientation of the hero
         """
         vector_hero = mo.vector(position_hero_now, position_hero_before)
+        vector_hero = Vector(-vector_hero.x, -vector_hero.y, -vector_hero.z)
         vector_hero_other = mo.vector(position_other, position_hero_before)
         return mo.angle_between_vectors(vector_hero, vector_hero_other)
