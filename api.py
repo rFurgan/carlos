@@ -70,7 +70,7 @@ class Api:
                 elif (
                     self._hero_id == -1
                     and self._hero == None
-                    and mo.vector_length(actor.get_velocity()) > 0
+                    and actor.get_velocity() > 0
                 ):
                     self._hero = Hero(
                         actor.id,
